@@ -9,4 +9,12 @@ public class HashTable<K, V> {
     public void removePair(K key){
         table.remove(key.hashCode());
     }
+
+    public V getValue(K key){
+        Integer hashCode = key.hashCode();
+        for (Pair<Integer, V> pair: table) {
+            if (pair.fst().equals(hashCode)) return pair.snd();
+        }
+        return null;
+    }
 }
