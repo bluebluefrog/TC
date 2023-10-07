@@ -27,7 +27,11 @@ class TableIndex extends Pair<String, String>{
 
 
 class Rule{
-    public static ArrayList<String> variables = new ArrayList<>(){
+    /**
+     * Use this array to get the variable name. Recommend using this array instead of hand typing because I
+     * replace the white space in name with "_"
+     */
+    public static ArrayList<String> variables = new ArrayList<String>(){
         {
             /*0*/add("<<prog>>");
             add("<<los>>");
@@ -71,6 +75,10 @@ class Rule{
         this.rule = rule;
     }
 
+    /**
+     * Use this to get the string from the right hand side of the rule
+     * @return
+     */
     public ArrayList<String> extractRule(){
         return new ArrayList<>(Arrays.asList(rule.split(" ")));
     }
@@ -85,8 +93,18 @@ class Terminal{
 
 }
 
+/**
+ * HOW TO USE THE PARSE TABLE
+ * - Just initialize with no para constructor
+ * - Use getValue() which take a TableIndex as parameter. Return a Rule object
+ * - Rule.extractRule() will return the right hand side of the rule in an array.
+ * - Example in the Runner class
+ */
 public class ParseTable extends HashTable<TableIndex, Rule> {
-    public static ArrayList<Rule> ruleList = new ArrayList<>(){
+    /**
+     * Don't need to care about this one
+     */
+    public static ArrayList<Rule> ruleList = new ArrayList<Rule>(){
         {
             /*0*/add(new Rule("<<prog>>", "public class <<ID>> { public static void main ( String[] args ) { <<los>> } }"));
             add(new Rule("<<los>>", "<<stat>> <<los>>"));
