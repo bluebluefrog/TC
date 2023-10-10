@@ -33,7 +33,7 @@ class Rule{
      * Use this array to get the variable name. Recommend using this array instead of hand typing because I
      * replace the white space in name with "_"
      */
-    public static ArrayList<TreeNode.Label> variables = new ArrayList<>(){
+    public static ArrayList<TreeNode.Label> variables = new ArrayList<TreeNode.Label>(){
         {
             /*0*/add(TreeNode.Label.prog);
             add(TreeNode.Label.los);
