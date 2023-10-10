@@ -1,7 +1,9 @@
+import sun.reflect.generics.tree.Tree;
+
 import java.lang.reflect.Array;
 import java.util.*;
-class TableIndex extends Pair<String, String>{
-    public TableIndex(String row, String column){
+class TableIndex extends Pair<TreeNode.Label, String>{
+    public TableIndex(TreeNode.Label row, String column){
         super(row, column);
     }
 }
@@ -31,46 +33,46 @@ class Rule{
      * Use this array to get the variable name. Recommend using this array instead of hand typing because I
      * replace the white space in name with "_"
      */
-    public static ArrayList<String> variables = new ArrayList<String>(){
+    public static ArrayList<TreeNode.Label> variables = new ArrayList<>(){
         {
-            /*0*/add("<<prog>>");
-            add("<<los>>");
-            add("<<stat>>");
-            add("<<while>>");
-            add("<<for>>");
-            /*5*/add("<<for_start>>");
-            add("<<for_arith>>");
-            add("<<if>>");
-            add("<<else_if>>");
-            add("<<else?if>>");
-            /*10*/add("<<poss_if>>");
-            add("<<assign>>");
-            add("<<decl>>");
-            add("<<poss_assign>>");
-            add("<<print>>");
-            /*15*/add("<<type>>");
-            add("<<expr>>");
-            add("<<char_expr>>");
-            add("<<bool_expr>>");
-            add("<<bool_op>>");
-            /*20*/add("<<bool_eq>>");
-            add("<<bool_log>>");
-            add("<<rel_expr>>");
-            add("<<rel_expr'>>");
-            add("<<rel_op>>");
-            /*25*/add("<<arith_expr>>");
-            add("<<arith_expr'>>");
-            add("<<term>>");
-            add("<<term'>>");
-            add("<<factor>>");
-            /*30*/add("<<print_expr>>");
+            /*0*/add(TreeNode.Label.prog);
+            add(TreeNode.Label.los);
+            add(TreeNode.Label.stat);
+            add(TreeNode.Label.whilestat);
+            add(TreeNode.Label.forstat);
+            /*5*/add(TreeNode.Label.forstart);
+            add(TreeNode.Label.forarith);
+            add(TreeNode.Label.ifstat);
+            add(TreeNode.Label.elseifstat);
+            add(TreeNode.Label.elseorelseif);
+            /*10*/add(TreeNode.Label.possif);
+            add(TreeNode.Label.assign);
+            add(TreeNode.Label.decl);
+            add(TreeNode.Label.possassign);
+            add(TreeNode.Label.print);
+            /*15*/add(TreeNode.Label.type);
+            add(TreeNode.Label.expr);
+            add(TreeNode.Label.charexpr);
+            add(TreeNode.Label.boolexpr);
+            add(TreeNode.Label.boolop);
+            /*20*/add(TreeNode.Label.booleq);
+            add(TreeNode.Label.boollog);
+            add(TreeNode.Label.relexpr);
+            add(TreeNode.Label.relexprprime);
+            add(TreeNode.Label.relop);
+            /*25*/add(TreeNode.Label.arithexpr);
+            add(TreeNode.Label.arithexprprime);
+            add(TreeNode.Label.term);
+            add(TreeNode.Label.termprime);
+            add(TreeNode.Label.factor);
+            /*30*/add(TreeNode.Label.printexpr);
         }
     };
 
-    public String variable;
+    public TreeNode.Label variable;
     public String rule;
 
-    public Rule(String variable, String rule) {
+    public Rule(TreeNode.Label variable, String rule) {
         this.variable = variable;
         this.rule = rule;
     }
@@ -106,71 +108,71 @@ public class ParseTable extends HashTable<TableIndex, Rule> {
      */
     public static ArrayList<Rule> ruleList = new ArrayList<Rule>(){
         {
-            /*0*/add(new Rule("<<prog>>", "public class <<ID>> { public static void main ( String[] args ) { <<los>> } }"));
-            add(new Rule("<<los>>", "<<stat>> <<los>>"));
-            add(new Rule("<<los>>", "epsilon"));
-            add(new Rule("<<stat>>", "<<while>>"));
-            add(new Rule("<<stat>>", "<<for>>"));
-            /*5*/add(new Rule("<<stat>>", "<<if>>"));
-            add(new Rule("<<stat>>", "<<assign>> ;"));
-            add(new Rule("<<stat>>", "<<decl>> ;"));
-            add(new Rule("<<stat>>", "<<print>> ;"));
-            add(new Rule("<<stat>>", ";"));
-            /*10*/add(new Rule("<<while>>", "while ( <<rel_expr>> <<bool_expr>> ) { <<los>> }"));
-            add(new Rule("<<for>>", "for ( <<for_start>> ; <<rel_expr>> <<bool_expr>> ; <<for_arith>> ) { <<los>> }"));
-            add(new Rule("<<for_start>>", "<<decl>>"));
-            add(new Rule("<<for_start>>", "epsilon"));
-            add(new Rule("<<for_arith>>", "<<arith_expr>>"));
-            /*15*/add(new Rule("<<for_arith>>", "epsilon"));
-            add(new Rule("<<if>>", "if ( <<rel_expr>> <<bool_expr>> ) { <<los>> } <<else_if>>"));
-            add(new Rule("<<else_if>>", "<<else?if>> { <<los>> } <<else_if>>"));
-            add(new Rule("<<else_if>>", "epsilon"));
-            add(new Rule("<<else?if>>", "else <<poss_if>>"));
-            /*20*/add(new Rule("<<poss_if>>", "if ( <<rel_expr>> <<bool_expr>> )"));
-            add(new Rule("<<poss_if>>", "epsilon"));
-            add(new Rule("<<assign>>", "<<ID>> = <<expr>>"));
-            add(new Rule("<<decl>>", "<<type>> <<ID>> <<poss_assign>>"));
-            add(new Rule("<<poss_assign>>", "= <<expr>>"));
-            /*25*/add(new Rule("<<poss_assign>>", "epsilon"));
-            add(new Rule("<<print>>", "System.out.println ( <<print_expr>> )"));
-            add(new Rule("<<type>>", "int"));
-            add(new Rule("<<type>>", "boolean "));
-            add(new Rule("<<type>>", "char"));
-            /*30*/add(new Rule("<<expr>>", "<<rel_expr>> <<bool_expr>>"));
-            add(new Rule("<<expr>>", "<<char expr>>"));
-            add(new Rule("<<char_expr>>", "' <<char>> '"));
-            add(new Rule("<<bool_expr>>", "<<bool_op>> <<rel_expr>> <<bool_expr>>"));
-            add(new Rule("<<bool_expr>>", "epsilon"));
-            /*35*/add(new Rule("<<bool_op>>", "<<bool_eq>>"));
-            add(new Rule("<<bool_op>>", "<<bool_log>>"));
-            add(new Rule("<<bool_eq>>", "=="));
-            add(new Rule("<<bool_eq>>", "!="));
-            add(new Rule("<<bool_log>>", "&&"));
-            /*40*/add(new Rule("<<bool_log>>", "||"));
-            add(new Rule("<<rel_expr>>", "<<arith_expr>> <<rel_expr'>>"));
-            add(new Rule("<<rel_expr>>", "true"));
-            add(new Rule("<<rel_expr>>", "false"));
-            add(new Rule("<<rel_expr'>>", "<<rel_op>> <<arith_expr>>"));
-            /*45*/add(new Rule("<<rel_expr'>>", "epsilon"));
-            add(new Rule("<<rel_op>>", "<"));
-            add(new Rule("<<rel_op>>", "<="));
-            add(new Rule("<<rel_op>>", ">"));
-            add(new Rule("<<rel_op>>", ">="));
-            /*50*/add(new Rule("<<arith_expr>>", "<<term>> <<arith_expr'>>"));
-            add(new Rule("<<arith_expr'>>", "+ <<term>> <<arith_expr'>>"));
-            add(new Rule("<<arith_expr'>>", "- <<term>> <<arith_expr'>>"));
-            add(new Rule("<<arith_expr'>>", "epsilon"));
-            add(new Rule("<<term>>", "<<factor>> <<term'>>"));
-            /*55*/add(new Rule("<<term'>>", "* <<factor>> <<term'>>"));
-            add(new Rule("<<term'>>", "/ <<factor>> <<term'>>"));
-            add(new Rule("<<term'>>", "% <<factor>> <<term'>>"));
-            add(new Rule("<<term'>>", "epsilon"));
-            add(new Rule("<<factor>>", "( <<arith_expr>> )"));
-            /*60*/add(new Rule("<<factor>>", "<<ID>>"));
-            add(new Rule("<<factor>>", "<<num>>"));
-            add(new Rule("<<print_expr>>", "<<rel_expr>> <<bool_expr>>"));
-            add(new Rule("<<print_expr>>", "\"<<string lit>> \""));
-            add(new Rule("<<for_start>>", "<<assign>>"));
+            /*0*/add(new Rule(TreeNode.Label.prog, "public class" + Token.TokenType.ID + "{ public static void main ( String[] args ) { " + TreeNode.Label.los + " } }"));
+            add(new Rule(TreeNode.Label.los, TreeNode.Label.stat + " " + TreeNode.Label.los));
+            add(new Rule(TreeNode.Label.los, "epsilon"));
+            add(new Rule(TreeNode.Label.stat, "" + TreeNode.Label.whilestat));
+            add(new Rule(TreeNode.Label.stat, TreeNode.Label.forstat.toString()));
+            /*5*/add(new Rule(TreeNode.Label.stat, "" + TreeNode.Label.ifstat));
+            add(new Rule(TreeNode.Label.stat, TreeNode.Label.assign + " ;"));
+            add(new Rule(TreeNode.Label.stat, TreeNode.Label.decl + " ;"));
+            add(new Rule(TreeNode.Label.stat, TreeNode.Label.print + " ;"));
+            add(new Rule(TreeNode.Label.stat, ";"));
+            /*10*/add(new Rule(TreeNode.Label.whilestat, "while ( " + TreeNode.Label.relexpr + " " + TreeNode.Label.boolexpr + " ) { " + TreeNode.Label.los + " }"));
+            add(new Rule(TreeNode.Label.forstat, "for ( " + TreeNode.Label.forstart + " ; " + TreeNode.Label.relexpr + " " + TreeNode.Label.boolexpr + " ; " + TreeNode.Label.forarith + " ) { " + TreeNode.Label.los + " }"));
+            add(new Rule(TreeNode.Label.forstart, "" + TreeNode.Label.decl));
+            add(new Rule(TreeNode.Label.forstart, "epsilon"));
+            add(new Rule(TreeNode.Label.forarith, "" + TreeNode.Label.arithexpr));
+            /*15*/add(new Rule(TreeNode.Label.forarith, "epsilon"));
+            add(new Rule(TreeNode.Label.ifstat, "if ( " + TreeNode.Label.relexpr + " " + TreeNode.Label.boolexpr + " ) { " + TreeNode.Label.los + " } " + TreeNode.Label.elseifstat));
+            add(new Rule(TreeNode.Label.elseifstat, TreeNode.Label.elseorelseif + " { " + TreeNode.Label.los + " } " + TreeNode.Label.elseifstat));
+            add(new Rule(TreeNode.Label.elseifstat, "epsilon"));
+            add(new Rule(TreeNode.Label.elseorelseif, "else " + TreeNode.Label.possif));
+            /*20*/add(new Rule(TreeNode.Label.possif, "if ( " + TreeNode.Label.relexpr + " " + TreeNode.Label.boolexpr + " )"));
+            add(new Rule(TreeNode.Label.possif, "epsilon"));
+            add(new Rule(TreeNode.Label.assign, Token.TokenType.ID + " = " + TreeNode.Label.expr));
+            add(new Rule(TreeNode.Label.decl, TreeNode.Label.type + " " + Token.TokenType.ID + " " + TreeNode.Label.possassign));
+            add(new Rule(TreeNode.Label.possassign, "= " + TreeNode.Label.expr));
+            /*25*/add(new Rule(TreeNode.Label.possassign, "epsilon"));
+            add(new Rule(TreeNode.Label.print, "System.out.println ( " + TreeNode.Label.printexpr + " )"));
+            add(new Rule(TreeNode.Label.type, "int"));
+            add(new Rule(TreeNode.Label.type, "boolean "));
+            add(new Rule(TreeNode.Label.type, "char"));
+            /*30*/add(new Rule(TreeNode.Label.expr, TreeNode.Label.relexpr + " " + TreeNode.Label.boolexpr));
+            add(new Rule(TreeNode.Label.expr, "" + TreeNode.Label.charexpr));
+            add(new Rule(TreeNode.Label.charexpr, "' " + Token.TokenType.CHARLIT + " '"));
+            add(new Rule(TreeNode.Label.boolexpr, TreeNode.Label.boolop + " " + TreeNode.Label.relexpr + " " + TreeNode.Label.boolexpr));
+            add(new Rule(TreeNode.Label.boolexpr, "epsilon"));
+            /*35*/add(new Rule(TreeNode.Label.boolop, "" + TreeNode.Label.booleq));
+            add(new Rule(TreeNode.Label.boolop, "" + TreeNode.Label.boollog));
+            add(new Rule(TreeNode.Label.booleq, "=="));
+            add(new Rule(TreeNode.Label.booleq, "!="));
+            add(new Rule(TreeNode.Label.boollog, "&&"));
+            /*40*/add(new Rule(TreeNode.Label.boollog, "||"));
+            add(new Rule(TreeNode.Label.relexpr, TreeNode.Label.arithexpr + " " + TreeNode.Label.relexprprime));
+            add(new Rule(TreeNode.Label.relexpr, "true"));
+            add(new Rule(TreeNode.Label.relexpr, "false"));
+            add(new Rule(TreeNode.Label.relexprprime, TreeNode.Label.relop + " " + TreeNode.Label.arithexpr));
+            /*45*/add(new Rule(TreeNode.Label.relexprprime, "epsilon"));
+            add(new Rule(TreeNode.Label.relop, "<"));
+            add(new Rule(TreeNode.Label.relop, "<="));
+            add(new Rule(TreeNode.Label.relop, ">"));
+            add(new Rule(TreeNode.Label.relop, ">="));
+            /*50*/add(new Rule(TreeNode.Label.arithexpr, TreeNode.Label.term+ " " + TreeNode.Label.arithexprprime));
+            add(new Rule(TreeNode.Label.arithexprprime, "+ " + TreeNode.Label.term+ " " + TreeNode.Label.arithexprprime));
+            add(new Rule(TreeNode.Label.arithexprprime, "- " + TreeNode.Label.term+ TreeNode.Label.arithexprprime));
+            add(new Rule(TreeNode.Label.arithexprprime, "epsilon"));
+            add(new Rule(TreeNode.Label.term, TreeNode.Label.factor + " " + TreeNode.Label.termprime));
+            /*55*/add(new Rule(TreeNode.Label.termprime, "* " + TreeNode.Label.factor + " " + TreeNode.Label.termprime));
+            add(new Rule(TreeNode.Label.termprime, "/ " + TreeNode.Label.factor + " " + TreeNode.Label.termprime));
+            add(new Rule(TreeNode.Label.termprime, "% " + TreeNode.Label.factor + " " + TreeNode.Label.termprime));
+            add(new Rule(TreeNode.Label.termprime, "epsilon"));
+            add(new Rule(TreeNode.Label.factor, "( " + TreeNode.Label.arithexpr + " )"));
+            /*60*/add(new Rule(TreeNode.Label.factor, "" + Token.TokenType.ID));
+            add(new Rule(TreeNode.Label.factor, "" + Token.TokenType.NUM));
+            add(new Rule(TreeNode.Label.printexpr, TreeNode.Label.relexpr + " " + TreeNode.Label.boolexpr));
+            add(new Rule(TreeNode.Label.printexpr, "\"" + Token.TokenType.STRINGLIT + " \""));
+            add(new Rule(TreeNode.Label.forstart, "" + TreeNode.Label.assign));
         }
     };
 
