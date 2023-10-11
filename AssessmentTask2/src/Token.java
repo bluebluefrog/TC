@@ -5,7 +5,7 @@ public class Token {
 	public enum TokenType implements Symbol {
 		PLUS, MINUS, TIMES, DIVIDE, MOD, ASSIGN, EQUAL, NEQUAL, LT, LE, GT, GE, LPAREN, RPAREN, LBRACE, RBRACE, AND, OR,
 		SEMICOLON, PUBLIC, CLASS, STATIC, VOID, MAIN, STRINGARR, ARGS, TYPE, PRINT, WHILE, FOR, IF, ELSE, DQUOTE,
-		SQUOTE, ID, NUM, CHARLIT, TRUE, FALSE, STRINGLIT;
+		SQUOTE, ID, NUM, CHARLIT, TRUE, FALSE, STRINGLIT, INT, BOOLEAN, CHAR, epsilon;
 
 		@Override
 		public boolean isVariable() {
@@ -28,12 +28,12 @@ public class Token {
 	private Symbol type;
 	private Optional<String> value;
 
-	public Token(Symbol type) {
+	public Token(TokenType type) {
 		this.type = type;
 		this.value = Optional.empty();
 	}
 
-	public Token(Symbol type, String value) {
+	public Token(TokenType type, String value) {
 		this.type = type;
 		this.value = Optional.of(value);
 	}
