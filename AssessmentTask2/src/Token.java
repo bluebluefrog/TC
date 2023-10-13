@@ -25,7 +25,7 @@ public class Token {
 		}
 	};
 
-	private Symbol type;
+	private TokenType type;
 	private Optional<String> value;
 
 	public Token(TokenType type) {
@@ -42,8 +42,15 @@ public class Token {
 		return this.value;
 	}
 
-	public Symbol getType() {
+	public TokenType getType() {
 		return this.type;
+	}
+	public void setType(TokenType type){
+		this.type = type;
+	}
+
+	public void setValue(String value){
+		this.value = Optional.of(value);
 	}
 
 	@Override
@@ -57,8 +64,6 @@ public class Token {
 				case STRINGLIT : return "[" + type + ": " + value + "]";
 				default : return "[" + type + "]";
 			}
-		} else if (type instanceof VariableType) {
-			return "<<" + type + ">>";
 		}
 		return "<<" + value + ">>";
 	}

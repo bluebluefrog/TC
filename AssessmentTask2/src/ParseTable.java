@@ -1,38 +1,12 @@
-import sun.reflect.generics.tree.Tree;
-
-import java.lang.reflect.Array;
 import java.util.*;
+//TableIndex for creating a hashed code for the table index
 class TableIndex extends Pair<TreeNode.Label, Token.TokenType>{
     public TableIndex(TreeNode.Label row, Token.TokenType column){
         super(row, column);
     }
 }
-//class Rule extends Pair<Token, ArrayList<Token>>{
-//    /**
-//     * @param left
-//     * @param right
-//     * For example, A -> B. A is left, B is right
-//     */
-//    public Rule(Token left, ArrayList<Token> right) {
-//        super(left, right);
-//    }
-//
-//    public ArrayList<Token> getRight(){
-//        return snd();
-//    }
-//
-//    public Token getLeft(){
-//        return fst();
-//    }
-//}
-
-
 
 class Rule{
-    /**
-     * Use this array to get the variable name. Recommend using this array instead of hand typing because I
-     * replace the white space in name with "_"
-     */
     public static ArrayList<TreeNode.Label> variables = new ArrayList<TreeNode.Label>(){
         {
             /*0*/add(TreeNode.Label.prog);
@@ -103,14 +77,11 @@ class Terminal{
  * - Example in the Runner class
  */
 public class ParseTable extends HashTable<TableIndex, Rule> {
-    /**
-     * Don't need to care about this one
-     */
     public static ArrayList<Rule> ruleList = new ArrayList<Rule>(){
         {
             /*0*/add(new Rule(TreeNode.Label.prog, new Symbol[]{Token.TokenType.PUBLIC, Token.TokenType.CLASS, Token.TokenType.ID, Token.TokenType.LBRACE, Token.TokenType.PUBLIC, Token.TokenType.STATIC, Token.TokenType.VOID, Token.TokenType.MAIN, Token.TokenType.LPAREN, Token.TokenType.STRINGARR, Token.TokenType.ARGS, Token.TokenType.RPAREN, Token.TokenType.LBRACE, TreeNode.Label.los, Token.TokenType.RBRACE, Token.TokenType.RBRACE}));
             add(new Rule(TreeNode.Label.los, new Symbol[]{TreeNode.Label.stat,TreeNode.Label.los}));
-            add(new Rule(TreeNode.Label.los, new Symbol[]{Token.TokenType.epsilon}));
+            add(new Rule(TreeNode.Label.los, new Symbol[]{TreeNode.Label.epsilon}));
             add(new Rule(TreeNode.Label.stat, new Symbol[]{TreeNode.Label.whilestat}));
             add(new Rule(TreeNode.Label.stat, new Symbol[]{TreeNode.Label.forstat}));
             /*5*/add(new Rule(TreeNode.Label.stat, new Symbol[]{TreeNode.Label.ifstat}));
@@ -118,22 +89,22 @@ public class ParseTable extends HashTable<TableIndex, Rule> {
             add(new Rule(TreeNode.Label.stat, new Symbol[]{TreeNode.Label.decl, Token.TokenType.SEMICOLON}));
             add(new Rule(TreeNode.Label.stat, new Symbol[]{TreeNode.Label.print ,Token.TokenType.SEMICOLON}));
             add(new Rule(TreeNode.Label.stat, new Symbol[]{Token.TokenType.SEMICOLON}));
-            /*10*/add(new Rule(TreeNode.Label.whilestat, new Symbol[]{Token.TokenType.WHILE, Token.TokenType.LPAREN, TreeNode.Label.relexpr, TreeNode.Label.boolexpr, Token.TokenType.LPAREN, Token.TokenType.LBRACE, TreeNode.Label.los, Token.TokenType.RBRACE}));
-            add(new Rule(TreeNode.Label.forstat, new Symbol[]{Token.TokenType.FOR, Token.TokenType.LPAREN, TreeNode.Label.forstart, Token.TokenType.SEMICOLON, TreeNode.Label.relexpr, TreeNode.Label.boolexpr, Token.TokenType.SEMICOLON, TreeNode.Label.forarith, Token.TokenType.LPAREN, Token.TokenType.LBRACE, TreeNode.Label.los, Token.TokenType.RBRACE}));
+            /*10*/add(new Rule(TreeNode.Label.whilestat, new Symbol[]{Token.TokenType.WHILE, Token.TokenType.LPAREN, TreeNode.Label.relexpr, TreeNode.Label.boolexpr, Token.TokenType.RPAREN, Token.TokenType.LBRACE, TreeNode.Label.los, Token.TokenType.RBRACE}));
+            add(new Rule(TreeNode.Label.forstat, new Symbol[]{Token.TokenType.FOR, Token.TokenType.LPAREN, TreeNode.Label.forstart, Token.TokenType.SEMICOLON, TreeNode.Label.relexpr, TreeNode.Label.boolexpr, Token.TokenType.SEMICOLON, TreeNode.Label.forarith, Token.TokenType.RPAREN, Token.TokenType.LBRACE, TreeNode.Label.los, Token.TokenType.RBRACE}));
             add(new Rule(TreeNode.Label.forstart, new Symbol[]{TreeNode.Label.decl}));
-            add(new Rule(TreeNode.Label.forstart, new Symbol[]{Token.TokenType.epsilon}));
+            add(new Rule(TreeNode.Label.forstart, new Symbol[]{TreeNode.Label.epsilon}));
             add(new Rule(TreeNode.Label.forarith, new Symbol[]{TreeNode.Label.arithexpr}));
-            /*15*/add(new Rule(TreeNode.Label.forarith, new Symbol[]{Token.TokenType.epsilon}));
+            /*15*/add(new Rule(TreeNode.Label.forarith, new Symbol[]{TreeNode.Label.epsilon}));
             add(new Rule(TreeNode.Label.ifstat, new Symbol[]{Token.TokenType.IF,Token.TokenType.LPAREN, TreeNode.Label.relexpr, TreeNode.Label.boolexpr, Token.TokenType.RPAREN, Token.TokenType.LBRACE, TreeNode.Label.los, Token.TokenType.RBRACE, TreeNode.Label.elseifstat}));
             add(new Rule(TreeNode.Label.elseifstat, new Symbol[]{TreeNode.Label.elseorelseif, Token.TokenType.LBRACE, TreeNode.Label.los, Token.TokenType.RBRACE, TreeNode.Label.elseifstat}));
-            add(new Rule(TreeNode.Label.elseifstat, new Symbol[]{Token.TokenType.epsilon}));
+            add(new Rule(TreeNode.Label.elseifstat, new Symbol[]{TreeNode.Label.epsilon}));
             add(new Rule(TreeNode.Label.elseorelseif, new Symbol[]{Token.TokenType.ELSE, TreeNode.Label.possif}));
             /*20*/add(new Rule(TreeNode.Label.possif, new Symbol[]{Token.TokenType.IF, Token.TokenType.LPAREN, TreeNode.Label.relexpr, TreeNode.Label.boolexpr, Token.TokenType.RPAREN}));
-            add(new Rule(TreeNode.Label.possif, new Symbol[]{Token.TokenType.epsilon}));
+            add(new Rule(TreeNode.Label.possif, new Symbol[]{TreeNode.Label.epsilon}));
             add(new Rule(TreeNode.Label.assign, new Symbol[]{Token.TokenType.ID,Token.TokenType.ASSIGN, TreeNode.Label.expr}));
             add(new Rule(TreeNode.Label.decl, new Symbol[]{TreeNode.Label.type, Token.TokenType.ID, TreeNode.Label.possassign}));
             add(new Rule(TreeNode.Label.possassign, new Symbol[]{Token.TokenType.ASSIGN, TreeNode.Label.expr}));
-            /*25*/add(new Rule(TreeNode.Label.possassign, new Symbol[]{Token.TokenType.epsilon}));
+            /*25*/add(new Rule(TreeNode.Label.possassign, new Symbol[]{TreeNode.Label.epsilon}));
             add(new Rule(TreeNode.Label.print, new Symbol[]{Token.TokenType.PRINT, Token.TokenType.LPAREN, TreeNode.Label.printexpr, Token.TokenType.RPAREN}));
             add(new Rule(TreeNode.Label.type, new Symbol[]{Token.TokenType.INT}));
             add(new Rule(TreeNode.Label.type, new Symbol[]{Token.TokenType.BOOLEAN}));
@@ -142,7 +113,7 @@ public class ParseTable extends HashTable<TableIndex, Rule> {
             add(new Rule(TreeNode.Label.expr, new Symbol[]{TreeNode.Label.charexpr}));
             add(new Rule(TreeNode.Label.charexpr, new Symbol[]{Token.TokenType.SQUOTE, Token.TokenType.CHARLIT, Token.TokenType.SQUOTE}));
             add(new Rule(TreeNode.Label.boolexpr, new Symbol[]{TreeNode.Label.boolop, TreeNode.Label.relexpr, TreeNode.Label.boolexpr}));
-            add(new Rule(TreeNode.Label.boolexpr, new Symbol[]{Token.TokenType.epsilon}));
+            add(new Rule(TreeNode.Label.boolexpr, new Symbol[]{TreeNode.Label.epsilon}));
             /*35*/add(new Rule(TreeNode.Label.boolop, new Symbol[]{TreeNode.Label.booleq}));
             add(new Rule(TreeNode.Label.boolop, new Symbol[]{TreeNode.Label.boollog}));
             add(new Rule(TreeNode.Label.booleq, new Symbol[]{Token.TokenType.EQUAL}));
@@ -153,7 +124,7 @@ public class ParseTable extends HashTable<TableIndex, Rule> {
             add(new Rule(TreeNode.Label.relexpr, new Symbol[]{Token.TokenType.TRUE}));
             add(new Rule(TreeNode.Label.relexpr, new Symbol[]{Token.TokenType.FALSE}));
             add(new Rule(TreeNode.Label.relexprprime, new Symbol[]{TreeNode.Label.relop, TreeNode.Label.arithexpr}));
-            /*45*/add(new Rule(TreeNode.Label.relexprprime, new Symbol[]{Token.TokenType.epsilon}));
+            /*45*/add(new Rule(TreeNode.Label.relexprprime, new Symbol[]{TreeNode.Label.epsilon}));
             add(new Rule(TreeNode.Label.relop, new Symbol[]{Token.TokenType.LT}));
             add(new Rule(TreeNode.Label.relop, new Symbol[]{Token.TokenType.GE}));
             add(new Rule(TreeNode.Label.relop, new Symbol[]{Token.TokenType.GT}));
@@ -161,12 +132,12 @@ public class ParseTable extends HashTable<TableIndex, Rule> {
             /*50*/add(new Rule(TreeNode.Label.arithexpr, new Symbol[]{TreeNode.Label.term,TreeNode.Label.arithexprprime}));
             add(new Rule(TreeNode.Label.arithexprprime, new Symbol[]{Token.TokenType.PLUS, TreeNode.Label.term,TreeNode.Label.arithexprprime}));
             add(new Rule(TreeNode.Label.arithexprprime, new Symbol[]{Token.TokenType.MINUS ,TreeNode.Label.term, TreeNode.Label.arithexprprime}));
-            add(new Rule(TreeNode.Label.arithexprprime, new Symbol[]{Token.TokenType.epsilon}));
+            add(new Rule(TreeNode.Label.arithexprprime, new Symbol[]{TreeNode.Label.epsilon}));
             add(new Rule(TreeNode.Label.term, new Symbol[]{TreeNode.Label.factor ,TreeNode.Label.termprime}));
             /*55*/add(new Rule(TreeNode.Label.termprime, new Symbol[]{Token.TokenType.TIMES, TreeNode.Label.factor ,TreeNode.Label.termprime}));
             add(new Rule(TreeNode.Label.termprime, new Symbol[]{Token.TokenType.DIVIDE, TreeNode.Label.factor ,TreeNode.Label.termprime}));
             add(new Rule(TreeNode.Label.termprime, new Symbol[]{Token.TokenType.MOD, TreeNode.Label.factor ,TreeNode.Label.termprime}));
-            add(new Rule(TreeNode.Label.termprime, new Symbol[]{Token.TokenType.epsilon}));
+            add(new Rule(TreeNode.Label.termprime, new Symbol[]{TreeNode.Label.epsilon}));
             add(new Rule(TreeNode.Label.factor, new Symbol[]{Token.TokenType.LPAREN, TreeNode.Label.arithexpr , Token.TokenType.RPAREN}));
             /*60*/add(new Rule(TreeNode.Label.factor, new Symbol[]{Token.TokenType.ID}));
             add(new Rule(TreeNode.Label.factor, new Symbol[]{Token.TokenType.NUM}));
@@ -256,13 +227,15 @@ public class ParseTable extends HashTable<TableIndex, Rule> {
         addPair(new TableIndex(Rule.variables.get(12), Token.TokenType.INT), ruleList.get(23));
         addPair(new TableIndex(Rule.variables.get(15), Token.TokenType.INT), ruleList.get(27));
         addPair(new TableIndex(Rule.variables.get(1), Token.TokenType.BOOLEAN), ruleList.get(1));
-        addPair(new TableIndex(Rule.variables.get(2), Token.TokenType.BOOLEAN), ruleList.get(3));
+        //Changed
+        addPair(new TableIndex(Rule.variables.get(2), Token.TokenType.BOOLEAN), ruleList.get(7));
         addPair(new TableIndex(Rule.variables.get(5), Token.TokenType.BOOLEAN), ruleList.get(12));
         addPair(new TableIndex(Rule.variables.get(8), Token.TokenType.BOOLEAN), ruleList.get(18));
         addPair(new TableIndex(Rule.variables.get(12), Token.TokenType.BOOLEAN), ruleList.get(23));
         addPair(new TableIndex(Rule.variables.get(15), Token.TokenType.BOOLEAN), ruleList.get(28));
         addPair(new TableIndex(Rule.variables.get(1), Token.TokenType.CHAR), ruleList.get(1));
-        addPair(new TableIndex(Rule.variables.get(2), Token.TokenType.CHAR), ruleList.get(3));
+        //Changed
+        addPair(new TableIndex(Rule.variables.get(2), Token.TokenType.CHAR), ruleList.get(7));
         addPair(new TableIndex(Rule.variables.get(5), Token.TokenType.CHAR), ruleList.get(12));
         addPair(new TableIndex(Rule.variables.get(8), Token.TokenType.CHAR), ruleList.get(18));
         addPair(new TableIndex(Rule.variables.get(12), Token.TokenType.CHAR), ruleList.get(23));
@@ -318,10 +291,12 @@ public class ParseTable extends HashTable<TableIndex, Rule> {
         addPair(new TableIndex(Rule.variables.get(27), Token.TokenType.NUM), ruleList.get(54));
         addPair(new TableIndex(Rule.variables.get(29), Token.TokenType.NUM), ruleList.get(61));
         addPair(new TableIndex(Rule.variables.get(30), Token.TokenType.NUM), ruleList.get(62));
-        addPair(new TableIndex(Rule.variables.get(2), Token.TokenType.epsilon), ruleList.get(3));
-        addPair(new TableIndex(Rule.variables.get(28), Token.TokenType.epsilon), ruleList.get(58));
-        addPair(new TableIndex(Rule.variables.get(26), Token.TokenType.epsilon), ruleList.get(53));
-        addPair(new TableIndex(Rule.variables.get(23), Token.TokenType.epsilon), ruleList.get(45));
-        addPair(new TableIndex(Rule.variables.get(18), Token.TokenType.epsilon), ruleList.get(34));
+//        addPair(new TableIndex(Rule.variables.get(2), Token.TokenType.epsilon), ruleList.get(3));
+//        addPair(new TableIndex(Rule.variables.get(28), Token.TokenType.epsilon), ruleList.get(58));
+//        addPair(new TableIndex(Rule.variables.get(26), Token.TokenType.epsilon), ruleList.get(53));
+//        addPair(new TableIndex(Rule.variables.get(23), Token.TokenType.epsilon), ruleList.get(45));
+//        addPair(new TableIndex(Rule.variables.get(18), Token.TokenType.epsilon), ruleList.get(34));
+        addPair(new TableIndex(Rule.variables.get(23), Token.TokenType.RPAREN), ruleList.get(45));
+        addPair(new TableIndex(Rule.variables.get(1), Token.TokenType.ID), ruleList.get(1));
     }
 }

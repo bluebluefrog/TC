@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class ParseTree {
 
 	private TreeNode root;
@@ -16,6 +19,19 @@ public class ParseTree {
 
 	public void setRoot(TreeNode root) {
 		this.root = root;
+	}
+
+	public ArrayList<TreeNode> getLeafNode(TreeNode node){
+		List<TreeNode> children = node.getChildren();
+		ArrayList<TreeNode> leafNodes = new ArrayList<TreeNode>();
+		if (children.isEmpty() || children == null){
+			leafNodes.add(node);
+			return leafNodes;
+		}
+		for (int i = 0; i < children.size(); i++) {
+			leafNodes.addAll(getLeafNode(children.get(i)));
+		}
+		return leafNodes;
 	}
 
 	private String spaces(int num) {
